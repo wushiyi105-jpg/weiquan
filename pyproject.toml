@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weiquan"
+version = "0.1.0"
+description = "消费售后维权 Agent —— 判断能不能退、该引哪条、写投诉文本"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[project.scripts]
+weiquan = "weiquan.cli:main"
+
+[tool.setuptools]
+packages = ["weiquan"]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
