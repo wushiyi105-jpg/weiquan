@@ -33,12 +33,46 @@ python -m weiquan check --text "11月18日签收的耳机,右耳没声音,客服
 
 把经过写进 `case.txt` 也可以:`python -m weiquan check --file case.txt --save`。
 
-Docker:
+Docker(镜像由 CI 推到 GHCR,每次打 tag 自动构建):
 
 ```bash
-docker build -t weiquan .
-docker run -p 8000:8000 weiquan
+docker pull ghcr.io/wushiyi105-jpg/weiquan:0.1.0
+docker run -p 8000:8000 ghcr.io/wushiyi105-jpg/weiquan:0.1.0
 ```
+
+自己构建:`docker build -t weiquan . && docker run -p 8000:8000 weiquan`。
+
+## 🧪 示例:拿真实纠纷跑一遍
+
+`examples/` 里 4 份脱敏过的真实经过(耳机、家电、生鲜、预付卡),`examples/out/` 是对应的实际输出(2026-11-26 跑出,离线模式,天数以当天为基准)。
+
+```bash
+python -m weiquan --mock check --file examples/case-01.txt --sign 2026-11-21 --evidence 订单,商品页,聊天记录
+```
+
+跑出来是这样(节选,完整见 [`examples/out/case-01.md`](./examples/out/case-01.md)):
+
+```
+⏳ 时效
+  签收日 2026-11-21,今天第 5 天
+  · 「七天无理由退货」截止 2026-11-28,还剩 2 天
+  · 「三包·7 日退货」截止 2026-11-28,还剩 2 天
+  · 「三包·15 日换货」截止 2026-12-06,还剩 10 天
+
+📎 证据体检
+  ✅ 订单与支付记录
+  ✅ 签收时间证明
+  ❌ 破损/故障影像 —— 质量问题需证明瑕疵存在与到货即损坏
+```
+
+> 天数会随运行日期变化,输出文件头部写明了生成命令与运行日期,可对着同一天复算。
+
+| 文件 | 场景 | 关注点 |
+|---|---|---|
+| `case-01.txt` | 耳机右耳无声,页面写七天无理由 | 无理由 vs 三包两条路,剩 2 天 |
+| `case-02.txt` | 羽绒服色差,客服称「超过七天」 | 时效抗辩、标签未拆 |
+| `case-03.txt` | 笔记本标「全新未拆封」实为翻新机 | 假一赔十、检测报告 |
+| `case-04.txt` | 定制窗帘尺寸做错 + 赠品缺失 | 定制例外、赠品扣减 |
 
 ## 🤔 为什么不用通用大模型直接问
 
@@ -166,8 +200,11 @@ weiquan/
 │   ├── exceptions.json  # 7 条例外 + 3 类扣减
 │   ├── promises.json    # 8 类承诺
 │   └── evidence.json    # 8 项证据
-├── tests/test_weiquan.py
-└── assets/demo.gif
+├── examples/            # 4 份脱敏经过 + out/ 实际输出
+├── tests/
+│   ├── test_weiquan.py      # 29 个本地逻辑用例
+│   └── test_integration.py   # 8 个集成用例(HTTP / 假模型 / CLI)
+└── assets/demo.gif      # 1080 宽,32 帧,9.9 秒
 ```
 
 ## ✅ 测试
@@ -176,7 +213,12 @@ weiquan/
 python -m unittest discover tests -v
 ```
 
-29 个单测只覆盖本地逻辑:类目识别、四种日期写法、剩余/超期、三包双节点、例外、承诺、证据、两份文书、剥离函数、离线全流程。CI 在 3.10/3.11/3.12 上跑。
+37 个用例分两层:
+
+- **本地逻辑(29)**:类目识别、四种日期写法、剩余/超期、三包双节点、例外、承诺、证据、两份文书、剥离函数、离线全流程。
+- **集成(8)**:真起 `ThreadingHTTPServer` 在随机端口 `POST /api/check`,断言天数等于本地计算、两份文书齐、落库 id 非空,未来签收日返回 400;起假 OpenAI 兼容服务,断言模型写的「还剩 3 天」「1500 元」「7 个工作日」全被 `strip_numbers` 换成「相应期限」;`subprocess` 跑 CLI,e2e 断言退出码与 stdout 关键行。
+
+CI 在 3.10 / 3.11 / 3.12 上跑,并用 codecov 记录覆盖率。
 
 ## 👤 作者
 

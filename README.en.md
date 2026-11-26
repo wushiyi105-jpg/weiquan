@@ -33,11 +33,31 @@ python -m weiquan check --text "Headphones delivered on Nov 18, right earbud sil
 
 Or keep the story in `case.txt` and run `python -m weiquan check --file case.txt --save`.
 
-Docker:
+Docker (the image is built and pushed to GHCR on every tag):
 
 ```bash
-docker build -t weiquan .
-docker run -p 8000:8000 weiquan
+docker pull ghcr.io/wushiyi105-jpg/weiquan:0.1.0
+docker run -p 8000:8000 ghcr.io/wushiyi105-jpg/weiquan:0.1.0
+```
+
+Build locally with `docker build -t weiquan . && docker run -p 8000:8000 weiquan`.
+
+## 🧪 Examples: run the real cases
+
+`examples/` holds 4 anonymised real disputes (earphones, jacket, laptop, custom curtains); `examples/out/` holds the actual output of 2026-11-26 in offline mode. Days are counted from the run date, and the header of each output file records the command and the date.
+
+```bash
+python -m weiquan --mock check --file examples/case-01.txt --sign 2026-11-21 --evidence 订单,商品页,聊天记录
+```
+
+Output (verbatim Chinese output, full file at [`examples/out/case-01.md`](./examples/out/case-01.md)):
+
+```
+⏳ 时效
+  签收日 2026-11-21,今天第 5 天
+  · 「七天无理由退货」截止 2026-11-28,还剩 2 天
+  · 「三包·7 日退货」截止 2026-11-28,还剩 2 天
+  · 「三包·15 日换货」截止 2026-12-06,还剩 10 天
 ```
 
 ## 🤔 Why not just ask a general LLM
@@ -166,8 +186,11 @@ weiquan/
 │   ├── exceptions.json  # 7 exceptions + 3 deductions
 │   ├── promises.json    # 8 promise types
 │   └── evidence.json    # 8 evidence items
-├── tests/test_weiquan.py
-└── assets/demo.gif
+├── examples/            # 4 anonymised disputes + out/ actual reports
+├── tests/
+│   ├── test_weiquan.py      # 29 local-logic tests
+│   └── test_integration.py   # 8 integration tests (HTTP / fake model / CLI)
+└── assets/demo.gif      # 1080 px wide, 32 frames, 9.9 s
 ```
 
 ## ✅ Tests
@@ -176,7 +199,12 @@ weiquan/
 python -m unittest discover tests -v
 ```
 
-29 tests cover local logic only: classification, four date formats, remaining/overdue, both three-pack nodes, exceptions, promises, evidence, both letters, the stripping function and the offline pipeline. CI runs them on 3.10/3.11/3.12.
+37 tests in two layers:
+
+- **Local logic (29)**: classification, four date formats, remaining/overdue, both three-pack nodes, exceptions, promises, evidence, both letters, the stripping function and the offline pipeline.
+- **Integration (8)**: a real `ThreadingHTTPServer` on a random port receiving `POST /api/check` and asserting the day count equals the local computation, both letters are present, an id is stored, and a future sign date returns 400; a fake OpenAI-compatible server asserting that "3 天", "1500 元" and "7 个工作日" written by the model are all replaced with 「相应期限」; `subprocess` CLI e2e asserting exit codes and stdout lines.
+
+CI runs them on 3.10 / 3.11 / 3.12 and records coverage with codecov.
 
 ## 👤 Author
 
