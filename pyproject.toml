@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "weiquan"
 version = "0.1.0"
-description = "消费售后维权 Agent —— 判断能不能退、该引哪条、写投诉文本"
+description = "维权 · 消费纠纷助手 · 判断能不能退、该引哪条、投诉文本怎么写"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 
