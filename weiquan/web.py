@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
@@ -141,6 +142,9 @@ def _handler(db, cfg, force_mock):
                 body = self._read()
                 ev = [x.strip() for x in str(body.get("evidence") or "").split(",") if x.strip()]
                 sign = rules.parse_date(body.get("sign")) if body.get("sign") else None
+                if sign and sign > date.today():
+                    self._json({"error": "签收日期 %s 晚于今天,请确认后再算时效。" % sign}, 400)
+                    return
                 r = agent.handle(body.get("text", ""), sign=sign, evidence=ev,
                                  config=cfg, db=db, force_mock=force_mock, save=True)
                 self._json(r)

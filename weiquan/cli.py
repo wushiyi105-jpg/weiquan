@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import date
 
 from . import __version__, agent, llm, rules
 from . import db as dbmod
@@ -100,6 +101,9 @@ def cmd_check(args):
         print("❌ 没有内容:用 --text、--file,或管道输入。", file=sys.stderr)
         sys.exit(2)
     sign = rules.parse_date(args.sign) if args.sign else None
+    if sign and sign > date.today():
+        print("❌ 签收日期 %s 晚于今天,请确认后再算时效。" % sign, file=sys.stderr)
+        sys.exit(2)
     ev = [x.strip() for x in (args.evidence or "").split(",") if x.strip()]
     db = dbmod.Database(args.db) if args.db else dbmod.Database()
     r = agent.handle(text, sign=sign, evidence=ev, config=llm.config_from_args(args),
