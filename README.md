@@ -204,7 +204,7 @@ weiquan/
 ├── tests/
 │   ├── test_weiquan.py      # 29 个本地逻辑用例
 │   └── test_integration.py   # 8 个集成用例(HTTP / 假模型 / CLI)
-└── assets/demo.gif      # 1080 宽,32 帧,9.9 秒
+└── assets/demo.gif      # 655 宽,32 帧,19.7 秒
 ```
 
 ## ✅ 测试

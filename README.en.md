@@ -190,7 +190,7 @@ weiquan/
 ├── tests/
 │   ├── test_weiquan.py      # 29 local-logic tests
 │   └── test_integration.py   # 8 integration tests (HTTP / fake model / CLI)
-└── assets/demo.gif      # 1080 px wide, 32 frames, 9.9 s
+└── assets/demo.gif      # 655 px wide, 32 frames, 19.7 s
 ```
 
 ## ✅ Tests

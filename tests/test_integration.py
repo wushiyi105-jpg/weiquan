@@ -157,9 +157,9 @@ class TestCLI(unittest.TestCase):
         self.assertIn("剩", p.stdout)
 
     def test_check_file_vector(self):
-        path = os.path.join(ROOT, "_tmp_case.txt")
-        with open(path, "w", encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, encoding="utf-8") as f:
             f.write(TEXT)
+            path = f.name
         try:
             p = self._run("--mock", "check", "--file", path, "--sign", SIGN)
         finally:
