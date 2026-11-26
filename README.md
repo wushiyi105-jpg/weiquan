@@ -222,7 +222,7 @@ CI 在 3.10 / 3.11 / 3.12 上跑,并用 codecov 记录覆盖率。
 
 ## 👤 作者
 
-shiyi · GitHub [@wushiyi105-jpg](https://github.com/wushiyi105-jpg) · [wushiyi105@gmail.com](mailto:wushiyi105@gmail.com)
+小米 · 17612850106
 
 ## 📄 License
 

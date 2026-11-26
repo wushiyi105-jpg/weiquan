@@ -208,7 +208,7 @@ CI runs them on 3.10 / 3.11 / 3.12 and records coverage with codecov.
 
 ## 👤 Author
 
-shiyi · GitHub [@wushiyi105-jpg](https://github.com/wushiyi105-jpg) · [wushiyi105@gmail.com](mailto:wushiyi105@gmail.com)
+Xiao Mi · 17612850106
 
 ## 📄 License
 
