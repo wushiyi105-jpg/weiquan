@@ -95,6 +95,20 @@ button.ghost,button.secondary{background:transparent!important;color:#9d3b3b!imp
 
 /* mobile-height */
 @media(max-width:760px){main{min-height:auto!important}aside{min-height:0!important}}
+
+/* mobile-sticky-cta */
+.mobile-cta{display:none}
+@media(max-width:760px){
+  body{padding-bottom:88px}
+  .route{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .route span{padding:8px 8px!important;font-size:11px!important;line-height:1.35!important}
+  .route b{font-size:9px!important;margin-bottom:1px!important}
+  .mobile-cta{position:fixed;left:12px;right:12px;bottom:12px;z-index:80;display:flex;
+    padding:8px;border:1px solid rgba(0,0,0,.08);border-radius:12px;
+    background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
+    box-shadow:0 10px 28px rgba(16,24,40,.18)}
+  .mobile-cta button{width:100%;min-height:52px;margin:0!important;font-size:15px}
+}
 </style>
 </head>
 <body>
@@ -154,6 +168,27 @@ fetch('/api/status').then(r=>r.json()).then(s=>{const b=$('#badge');
   if(s.mock){b.textContent='离线模式';b.style.background='#fee2e2';b.style.color='#b3402f';}
   else{b.textContent=s.model||'模型已连接';b.style.background='#dcfce7';b.style.color='#3f7d58';}
 }).catch(()=>{});
+</script>
+
+<script>
+(function(){
+  var want = "开始分析";
+  function norm(t){ return String(t||'').replace(/\s+/g,''); }
+  var all=[].slice.call(document.querySelectorAll('button'));
+  var src=null, fallback=null;
+  for(var i=0;i<all.length;i++){
+    var b=all[i];
+    if(b.offsetParent===null||b.disabled) continue;
+    if(!fallback) fallback=b;
+    if(norm(b.textContent).indexOf(norm(want))>=0){ src=b; break; }
+  }
+  if(!src) src=fallback;
+  if(!src) return;
+  var bar=document.createElement('div'); bar.className='mobile-cta';
+  var btn=src.cloneNode(true); btn.removeAttribute('id'); btn.type='button';
+  btn.addEventListener('click',function(e){e.preventDefault(); src.click();});
+  bar.appendChild(btn); document.body.appendChild(bar);
+})();
 </script>
 </body></html>
 """
