@@ -14,7 +14,7 @@ PAGE = """<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>维权 · 消费纠纷助手</title>
+<title>维权 · 现在先补哪项证据</title>
 <style>
   :root{--bg:#f7f5f2;--card:#fff;--ink:#26221d;--muted:#7a7267;--brown:#8a4b2a;--soft:#f2e4d8;
         --line:#e7e0d8;--red:#b3402f;--green:#3f7d58;--radius:16px}
@@ -41,14 +41,70 @@ PAGE = """<!doctype html>
   .box{background:#faf7f4;border-radius:10px;padding:12px 14px;margin:8px 0;font-size:14px;white-space:pre-wrap;line-height:1.7}
   .item{border-left:3px solid var(--brown);padding:4px 0 4px 12px;margin:10px 0;font-size:14px}
   ul{margin:6px 0 0 18px;padding:0}li{margin:6px 0;font-size:14px}
+
+.prod{display:block;font-size:11px;line-height:1.4;letter-spacing:.18em;font-weight:650;margin-bottom:8px;opacity:.72}
+.lede{max-width:62ch;line-height:1.75}
+.route{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:0 0 20px;border:1px solid var(--line);background:var(--line)}
+.route span{padding:11px 13px;background:var(--card);font-size:12px;line-height:1.5}
+.route b{display:block;font-size:10px;letter-spacing:.1em;margin-bottom:3px;opacity:.66}
+button{min-height:46px}
+input,select{min-height:44px}
+@media(max-width:680px){
+  .wrap{padding:20px 16px 56px}
+  .route{grid-template-columns:1fr}
+  header h1{font-size:30px!important}
+  .row>div{min-width:100%!important}
+  button{width:100%}
+}
+
+body{background:#f4efe6;color:#1e3550;font-family:"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:900px}
+header{padding:10px 0 20px;border-bottom:3px double #1e3550;margin-bottom:22px}
+header h1{font-family:"Songti SC","SimSun",Georgia,serif;font-size:38px;line-height:1.24;letter-spacing:-.01em}
+header p{color:#63625f;font-size:14px}
+.card{background:#fffdf9;border:1px solid #d8cdbd;border-left:4px solid #1e3550;border-radius:0;box-shadow:none}
+button{background:#1e3550;border-radius:0;letter-spacing:.06em}
+button:hover{background:#2c4b6e}
+textarea,input,select{background:#fffdf9;border-color:#d3c6b4;border-radius:0}
+textarea:focus,input:focus,select:focus{border-color:#9d3b3b;box-shadow:0 0 0 2px #e7d5d2}
+.item{border-left:0;padding:4px 0 4px 26px;position:relative}
+.item::before{content:"";position:absolute;left:4px;top:11px;width:7px;height:7px;border-radius:50%;background:#9d3b3b;box-shadow:0 0 0 4px #f1e3df}
+.item.high::before{background:#9d3b3b}
+h3{color:#9d3b3b;letter-spacing:.08em}
+
+
+/* palette-normalized */
+:root{--bg:#f4efe6;--card:#fffdf9;--ink:#1e3550;--text:#1e3550;--dim:#63625f;--line:#d8cdbd;--accent:#9d3b3b}
+
+/* polish-batch1 */
+button.ghost,button.secondary{background:transparent!important;color:#9d3b3b!important;border:1px solid #d8cdbd!important}
+
+/* mobile-32 */
+
+@media(max-width:760px){
+  main{grid-template-columns:1fr!important}
+  aside{border-right:0!important;border-bottom:1px solid #d8cdbd;width:auto!important}
+  section{padding:16px!important}
+  .row{flex-wrap:wrap!important}
+  .row>div{min-width:100%!important}
+  h1{font-size:30px!important}
+  .route{grid-template-columns:1fr!important}
+  button{min-height:48px}
+  pre{overflow-x:auto}
+}
+
+/* mobile-height */
+@media(max-width:760px){main{min-height:auto!important}aside{min-height:0!important}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>维权 · 消费纠纷助手<span class="badge" id="badge">…</span></h1>
-    <p>把售后经过说清楚,算清时效、挑对路径、补齐证据,再给你两份能直接发的文字。</p>
+    <h1><span class="prod">维权</span>现在，先补哪项证据 <span class="badge" id="badge">…</span></h1>
+    <p class="lede">给要退货、退款或投诉的人：订单、商品页和对话放进同一条时间线，每条主张挂上证据，规则注明渠道与地区。</p>
   </header>
+  <div class="route" aria-label="任务步骤"><span><b>01</b>还原售后经过</span><span><b>02</b>对上每项证据</span><span><b>03</b>生成投诉草稿</span></div>
+
   <div class="card">
     <label>纠纷经过(原话即可)</label>
     <textarea id="text" rows="8" placeholder="11月18日签收的耳机,拆开发现右耳没声音,客服说只能换不能退,页面写着七天无理由,订单 1699 元"></textarea>
